@@ -1,7 +1,7 @@
 desired_speed_pub:
   ros__parameters:
     # Speeds in m/s (1 m/s = 3365.4 ERPM): 0.9 ~= 3000 ERPM, 0.6 ~= 2000 ERPM
-    max_speed: 0.9
+    max_speed: 2.0
     min_speed: 0.6
     brake_distance: 2.0
     Kp: 1.5

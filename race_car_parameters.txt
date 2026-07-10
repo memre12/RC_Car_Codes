@@ -1,0 +1,47 @@
+motor poles = 14
+gear ratio = 2.769
+battery cell series = 3 cell
+wheelbase = 28 cm
+wheel radius = 5.5 cm
+max turning radius = 29.85 degree
+vehicle length = 44.0 cm
+vehicle width = 31.5 cm
+vehicle height = 28.75 cm
+
+
+
+
+
+            (Araç arkası)
+     ┌───────────────────────────┐
+Sağ  │                           │  Sol
+     │            │              │
+     │ 15.75cm -- │  (merkez hat)│
+     │            ●  CG          │
+     │            │              │
+
+     │                           │
+     │           24cm            │
+     │             |             │
+     │                           │
+     │                           │
+     └───────────────────────────┘
+            (Araç önü)
+
+ağrılık merkezi konumu
+önden 24 cm uzaklıkta
+yerden yüksekliği 13.5 cm
+sola göre 15.75 cm (yani sağ sol olarak ortada)
+Sol kenardan CG’ye: 15.75 cm
+
+
+
+v(m/s) = erpm * 2piR / (60 * (poles/2) * gear_ratio)
+
+NOT: VESC'in ERPM degeri elektriksel RPM'dir = mekanik RPM x kutup CIFTI (poles/2 = 7),
+kutup sayisi degil. Eski formul (60*poles*...) hizi 2 kat kucuk hesapliyordu.
+
+Bu aracla: 1 m/s = 60 * 7 * 2.769 / (2*pi*0.055) = 3365.4 ERPM
+  2000 ERPM ~= 0.59 m/s  (yavas yurume hizi — sahada dogrulandi)
+  3000 ERPM ~= 0.89 m/s
+  6000 ERPM ~= 1.78 m/s

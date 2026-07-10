@@ -13,12 +13,12 @@ def generate_launch_description():
             parameters=[{
                 'scan_topic': '/scan',
                 'grid_topic': '/occupancy_grid',
-                'grid_resolution': 0.05,
-                'grid_size_x': 10.0,
-                'grid_size_y': 10.0,
+                'grid_resolution': 0.1,
+                'grid_size_x': 8.0,
+                'grid_size_y': 8.0,
                 # >= half vehicle width (0.158 m), see race_car_parameters.txt
-                'inflation_radius': 0.15,
-                'inflation_cost': 80,
+                'inflation_radius': 0.25,
+                'inflation_cost': 100,
             }]
         ),
 
@@ -55,12 +55,12 @@ def generate_launch_description():
                 'planner_horizon': 10.0,
                 # Speed-adaptive anchor distance (m/s -> meters)
                 'min_speed': 0.5,
-                'max_speed': 10.0,
-                'min_lookahead': 3.0,
-                'max_lookahead': 15.0,
-                'lethal_threshold': 50,
+                'max_speed': 2.0,
+                'min_lookahead': 2.0,
+                'max_lookahead': 5.0,
+                'lethal_threshold': 40,
                 'path_resolution': 0.05,
-                'candidate_offsets': [-1.0, -0.8, -0.6, -0.4, -0.2, 0.0,
+                'candidate_offsets': [-1.1, -0.9, -0.7, -0.5, -0.3, 0.0,
                                       0.2, 0.4, 0.6, 0.8, 1.0],
             }]
         ),

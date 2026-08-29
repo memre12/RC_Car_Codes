@@ -1,0 +1,17 @@
+desired_speed_pub:
+  ros__parameters:
+    # Speeds in m/s (1 m/s = 3365.4 ERPM): 0.9 ~= 3000 ERPM, 0.6 ~= 2000 ERPM
+    max_speed: 2.0
+    min_speed: 0.6
+    brake_distance: 2.0
+    Kp: 1.5
+    Kd: 7.0
+    Ts: 0.05
+    speed_from_path: false
+    pd_max: 20.0
+    trajectory_topic: "/path"
+    base_frame: "base_link"
+    Ld: 0.29
+    # Mission planner mode signal: in lattice (obstacle) mode the speed
+    # reference is forced down to min_speed until the path is clear again.
+    switch_topic: "/switch_to_centerline"

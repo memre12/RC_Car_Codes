@@ -1,0 +1,44 @@
+race_car_controller:
+  ros__parameters:
+    # --- Vehicle geometry (measured, see race_car_parameters.txt) ---
+    wheelbase: 0.28              # meters
+    max_steer_angle_deg: 29.85   # physical steering limit of the front wheels
+
+    # --- Steering ---
+    # steering_gain = 1.0 -> pure geometric pure pursuit.
+    # 2.35 reproduces the response tuned on track with the old code
+    # (gain 2.2 on a 45 deg scale, 0.45 m wheelbase): same servo slope,
+    # same saturation point (full lock at ~12.7 deg of Ackermann angle).
+    steering_gain: 2.35
+    servo_min: 0.2               # servo command at full lock (one side)
+    servo_max: 0.8               # servo command at full lock (other side)
+    servo_center: 0.5            # straight
+
+    # --- Lookahead (speed adaptive: Ld = lookahead_distance * v / min_speed) ---
+    lookahead_distance: 1.3      # meters, Ld at min_speed
+    min_look_ahead_distance: 0.6
+    max_look_ahead_distance: 2.4
+
+    # --- Speed (m/s; 1 m/s = 3365.4 ERPM with this drivetrain) ---
+    min_speed: 0.6               # m/s at which Ld == lookahead_distance (~2000 ERPM)
+    max_speed: 1.8               # m/s safety ceiling for motor commands (~6000 ERPM)
+
+    # --- Drivetrain (measured; used for the m/s -> ERPM conversion) ---
+    # ERPM = v * 60 * (motor_poles/2) * gear_ratio / (2*pi*wheel_radius)
+    # Note: VESC ERPM counts pole PAIRS, not poles.
+    motor_poles: 14.0
+    gear_ratio: 2.769
+    wheel_radius: 0.055          # meters
+
+    # --- Topics ---
+    path_topic: "/selected_path" # output of the lattice planner
+    odom_topic: "/pf/pose/odom"
+    servo_topic_pub: "/commands/servo/position"
+    motor_topic_pub: "/commands/motor/speed"
+    target_speed_topic: "/target_speed"
+    vesc_state_topic: "/sensors/core"
+    joy_topic: "/joy"
+    rviz_lookahead_waypoint_topic: "/ego_racecar/lookahead_waypoint"
+
+    # --- Misc ---
+    toggle_cooldown_sec: 0.5     # debounce for the joystick autonomous toggle

@@ -1,0 +1,5 @@
+v_ref_gen:
+  ros__parameters:
+    path_file: "install/v_ref_gen/share/v_ref_gen/maps/smooth_loop_path3.csv"
+    speed_from_path: false
+

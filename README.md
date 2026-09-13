@@ -66,11 +66,8 @@ Notes:
 # 1. Hardware (lidar + VESC + joystick)
 ros2 launch race_car_launcher drivers.launch.py
 
-# 2. Autonomy (localization + path/speed refs + controller)
+# 2. Autonomy (localization + path/speed refs + controller + Obstacle Avoidance)
 ros2 launch race_car_launcher autonomous.launch.py
-
-# 3. Obstacle avoidance
-ros2 launch lattice_planner_pkg lattice_planner.launch.py
 ```
 
 Joystick button 0 toggles autonomous mode (0.5 s debounce). While off, the

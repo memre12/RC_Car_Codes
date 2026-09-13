@@ -7,6 +7,12 @@ and a particle-filter localization against a pre-built map.
 Targets **ROS 2 Foxy** on the car; also builds on Humble (the tf2 include
 deprecation warning on Humble is expected and harmless).
 
+## Demo video
+
+[![Watch the RC autonomous race car demo](https://img.youtube.com/vi/IBQtza92N10/maxresdefault.jpg)](https://www.youtube.com/watch?v=IBQtza92N10)
+
+Click the preview to watch the video on YouTube.
+
 ## System architecture
 
 ![RC Autonomous Race Car system architecture](docs/architecture/system_architecture.png)
@@ -72,6 +78,22 @@ ros2 launch race_car_launcher autonomous.launch.py
 
 Joystick button 0 toggles autonomous mode (0.5 s debounce). While off, the
 controller streams neutral servo / zero speed.
+
+## Simulation
+
+The autonomy stack can also be integrated with
+[`RC_Car_Sim`](https://github.com/memre12/RC_Car_Sim). In simulation, do not
+start the physical sensor drivers; sensor data is supplied by the simulator.
+The planning and control components can be used with the simulated topics.
+
+Build and start the simulator from its own workspace:
+
+```bash
+cd ~/RC_Car_Sim
+./build.sh
+source install/setup.bash
+ros2 launch sim_pkg simulation_environment.launch.py
+```
 
 ## Tuning quick reference
 

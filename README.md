@@ -9,34 +9,9 @@ deprecation warning on Humble is expected and harmless).
 
 ## System architecture
 
-```
-                 ┌──────────────┐          ┌──────────────────┐
- YDLidar ───────>│ /scan        ├─────────>│ particle_filter  ├──> /pf/pose/odom
-                 └──────┬───────┘          │ (localization)   │         │
-                        │                  └──────────────────┘         │
-                        v                                               │
-              ┌───────────────────┐                                     │
-              │ scan_to_grid      │ local grid, base_link               │
-              └─────────┬─────────┘                                     │
-                        │ /occupancy_grid                               │
-          ┌─────────────┼──────────────────┐                            │
-          v             v                  │                            │
- ┌─────────────────┐  ┌─────────────────┐  │                            │
- │ mission_planner │  │ lattice_planner │<─┼────────────────────────────┤
- └────────┬────────┘  └────────┬────────┘  │                            │
-          │ /switch_to_        │ /selected_path                         │
-          │  centerline        v                                        │
-          └──────────> ┌───────────────────────┐                        │
-                       │ race_car_controller   │<───────────────────────┤
- path_publisher ──────>│ (pure pursuit)        │                        │
-   │ /path (latched)   └───────┬───────────────┘                        │
-   v                           │ /commands/servo/position  [0..1]       │
- desired_speed_pub ───────────>│ /commands/motor/speed     [ERPM]       │
-   /target_speed [m/s]         v                                        │
-                       ┌──────────────┐                                 │
-                       │ vesc_driver  │──> /sensors/core ────────────────┘
-                       └──────────────┘      (+ /joy: autonomous on/off, button 0)
-```
+![RC Autonomous Race Car system architecture](docs/architecture/system_architecture.png)
+
+Editable source: [`system_architecture.drawio`](docs/architecture/system_architecture.drawio)
 
 - **path_publisher / desired_speed_pub** (`v_ref_gen`) — publish the global
   centerline (`/path`, latched) and the speed reference (`/target_speed`,

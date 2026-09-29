@@ -1,0 +1,50 @@
+cmake_minimum_required(VERSION 3.5)
+project(mpc_tracking_controller)
+
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release)
+endif()
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+add_compile_options(-Wall -Wextra -O3)
+# -DMPC_NATIVE=ON: tune for the build machine (e.g. build ON the Jetson; not for cross-builds)
+option(MPC_NATIVE "compile with -mcpu/-march=native" OFF)
+if(MPC_NATIVE)
+  if(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64")
+    add_compile_options(-mcpu=native)
+  else()
+    add_compile_options(-march=native)
+  endif()
+endif()
+
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(nav_msgs REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(vesc_msgs REQUIRED)
+find_package(Eigen3 REQUIRED)
+
+# ROS-free core (tested without ROS)
+add_library(mpc_core STATIC src/path_geometry.cpp src/tracking_mpc.cpp)
+target_include_directories(mpc_core PUBLIC include ${EIGEN3_INCLUDE_DIR})
+set_target_properties(mpc_core PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+add_executable(mpc_node src/mpc_node.cpp)
+target_link_libraries(mpc_node mpc_core)
+ament_target_dependencies(mpc_node rclcpp nav_msgs std_msgs sensor_msgs vesc_msgs)
+
+# closed-loop check without ROS: the identified car (delays, lags, map, latency) on a path CSV
+add_executable(mpc_closed_loop test/closed_loop.cpp)
+target_link_libraries(mpc_closed_loop mpc_core)
+
+install(TARGETS mpc_node mpc_closed_loop DESTINATION lib/${PROJECT_NAME})
+install(DIRECTORY launch config DESTINATION share/${PROJECT_NAME})
+
+if(BUILD_TESTING)
+  find_package(ament_cmake_gtest REQUIRED)
+  ament_add_gtest(test_mpc test/test_mpc.cpp)
+  target_link_libraries(test_mpc mpc_core)
+endif()
+
+ament_package()

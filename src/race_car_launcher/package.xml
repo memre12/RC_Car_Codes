@@ -15,9 +15,9 @@
   <exec_depend>v_ref_gen</exec_depend>
   <exec_depend>particle_filter</exec_depend>
   <exec_depend>lattice_planner_pkg</exec_depend>
-  <exec_depend>vesc_driver</exec_depend>
+  <!-- <exec_depend>vesc_driver</exec_depend>
   <exec_depend>ydlidar_ros2_driver</exec_depend>
-  <exec_depend>joy</exec_depend>
+  <exec_depend>joy</exec_depend> -->
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

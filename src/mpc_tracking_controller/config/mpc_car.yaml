@@ -1,0 +1,73 @@
+# MPC path-tracking controller, the real car (and Gazebo's car-like mode, which reproduces it).
+# Every model value is IDENTIFIED from the car's logs (bags/fair_bags/fair_pp_1 + fair_irl_1):
+# RC_Car_Codes/results/identification/car_model.json (scripts/identify_car_dynamics.py),
+# the same values RC_Car_Sim/src/plugins_pkgs/car_plugin/config/car_like.json uses.
+# Weights and constraints are those of the IRL controller (config/controller.yaml, CostConfig),
+# so both are compared on the same objective. Design choices are marked as such.
+mpc_controller:
+  ros__parameters:
+    odom_topic: /pf/pose/odom
+    path_topic: /selected_path
+    target_speed_topic: /target_speed
+    joy_topic: /joy
+    servo_topic: /commands/servo/position
+    motor_topic: /commands/motor/speed
+    imu_topic: /zed2/zed_node/imu/data
+    vesc_state_topic: /sensors/core
+
+    # actuator calibration: controller.yaml real.* (calibrate_from_bag.py on jetson_bag_new)
+    speed_cmd_per_mps: 2171.0
+    servo_per_rad: 0.929
+    servo_center: 0.5
+    servo_min: 0.2
+    servo_max: 0.8
+    delta_max: 0.32            # rad of servo command (servo 0.2..0.8)
+    require_arming: true       # joystick button 0 toggles, as race_car_controller / the IRL node
+    joy_button: 0
+    joy_cooldown: 0.5
+    odom_timeout: 0.5
+    target_speed_timeout: 1.0
+    abort_e_lat: 0.8           # m, as the IRL node
+    abort_e_psi: 1.0           # rad
+
+    # command limits: as the IRL node (config.py CommandLimits, controller.yaml)
+    v_min: 0.0
+    v_max: 2.0
+    v_rate_max: 2.0            # m/s^2
+    delta_rate_max: 1.5        # rad/s
+    a_lat_max: 2.0             # m/s^2, speed cap sqrt(a_lat_max / |kappa|)
+    control_period: 0.1        # s, rate limits per control step (as the IRL node)
+    use_imu: true
+
+    model:
+      wheelbase: 0.28          # m, in pose units (servo_per_rad calibrated for L = 0.28)
+      lever_arm: 0.17          # m, PF point ahead of the rear axle (0.167-0.178, lateral velocity = a r)
+      steer_dead_time: 0.05    # s   car_model.json steering (yaw rate vs servo; val. RMSE 0.059-0.074 rad/s)
+      steer_tau: 0.04          # s
+      use_steer_map: true
+      steer_map_cmd: [-0.32, -0.2, -0.1, 0.0, 0.1, 0.2, 0.32]
+      steer_map_eff: [-0.314, -0.217, -0.092, -0.008, 0.089, 0.204, 0.347]
+      speed_dead_time: 0.18    # s   car_model.json speed (VESC; val. RMSE 0.050-0.077 m/s)
+      speed_tau: 0.25          # s
+      speed_gain: 1.005
+      pose_latency_position: 0.239   # s  PF position vs IMU/VESC dead reckoning (fair_irl_1, +-0.011)
+      pose_latency_heading: 0.200    # s  PF heading vs IMU (fair_irl_1; 0.170 with pure pursuit)
+      heading_bias: 0.045            # rad course - PF heading on straights (all four directions)
+      compute_delay: 0.014           # s  minimum pose -> command delay assumed (the IRL node's on the
+                                     #    Jetson, fair_irl_1); the node's own measured delay is used if larger
+
+    mpc:
+      horizon: 20              # stages (design choice: 2 s > the slowest dynamics, 0.43 s speed)
+      dt: 0.1                  # s per stage
+      substeps: 4
+      max_e_lat: 0.10          # Bryson weights = the IRL running cost (config.py CostConfig)
+      max_e_psi: 0.15
+      max_e_v: 0.25
+      max_v_rate: 1.5
+      max_delta_rate: 1.0
+      terminal_factor: 5.0     # design choice
+      cap_preview_stages: 6    # lateral-acceleration cap over 0.6 s ahead (as the IRL preview)
+      sqp_iterations: 1        # real-time iteration
+      qp_max_iter: 400
+      qp_eps_abs: 1.0e-5
+      qp_eps_rel: 1.0e-4

@@ -17,11 +17,11 @@ def generate_launch_description():
         # -------------------------
         # CLASSIC CONTROLLER
         # -------------------------
-       IncludeLaunchDescription(
-           PythonLaunchDescriptionSource(
-               os.path.join(controller_dir, 'launch', 'launcher.launch.py')
-           )
-       ),
+    #    IncludeLaunchDescription(
+    #        PythonLaunchDescriptionSource(
+    #            os.path.join(controller_dir, 'launch', 'launcher.launch.py')
+    #        )
+    #    ),
 
         # -------------------------
         # V REF + PATH + SPEED
@@ -32,14 +32,14 @@ def generate_launch_description():
             )
         ),
 
-        # -------------------------
-        # LOCALIZATION (PF)
-        # -------------------------
-        IncludeLaunchDescription(
-           PythonLaunchDescriptionSource(
-               os.path.join(pf_dir, 'launch', 'localize_launch.py')
-           )
-        ),
+        # # -------------------------
+        # # LOCALIZATION (PF)
+        # # -------------------------
+        # IncludeLaunchDescription(
+        #    PythonLaunchDescriptionSource(
+        #        os.path.join(pf_dir, 'launch', 'localize_launch.py')
+        #    )
+        # ),
 
         # -------------------------
         # OBSTACLE AVOIDANCE (LATTICE)

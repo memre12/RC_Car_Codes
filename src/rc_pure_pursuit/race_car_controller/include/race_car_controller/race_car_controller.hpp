@@ -98,7 +98,7 @@ private:
     double desired_speed_ = 0.0;   // m/s, commanded by /target_speed
     double current_speed_ = 0.0;   // m/s, converted from the VESC ERPM feedback
     double lookahead_distance_;    // meters, adapted to speed
-    bool autonomous_flag_ = false;
+    bool autonomous_flag_ = true;
     rclcpp::Time last_autonomous_toggle_time_;
 
     // -- Vehicle geometry / steering parameters ------------------------------
